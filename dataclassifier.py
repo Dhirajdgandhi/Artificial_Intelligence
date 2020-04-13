@@ -1,4 +1,7 @@
 import math
+import time
+import matplotlib.pyplot as plt
+
 from perceptron import PerceptronClassifier
 
 from samples import Samples
@@ -42,11 +45,8 @@ class DataClassifier:
 
         return featureValueList
 
-    def extractFeatures(self, lines_itr, labelsLines_itr, ITERATIONS):
-        try:
-            imageLine = lines_itr.__next__()
-        except StopIteration:
-            return None, None
+    def extractFeatures(self, lines_itr, labelsLines_itr):
+        imageLine = lines_itr.__next__()
 
         totalImages = 0
         featureValueListPerImage = [1]
@@ -54,7 +54,7 @@ class DataClassifier:
         actualLabelList = []
 
         try:
-            while imageLine and totalImages < ITERATIONS:
+            while imageLine:
                 # Skipping the blank lines
                 while imageLine and self.countPixels(imageLine) == 0:
                     imageLine = lines_itr.__next__()
@@ -75,47 +75,66 @@ class DataClassifier:
                 featureValueListPerImage = [1]
         except StopIteration:
             # print("End of File")
-            return None, None
+            pass
 
         return featureValueListForAllTestingImages, actualLabelList
 
 
 if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
+    PERCENT_INCREMENT = 10
+
     samples = Samples()
     dataClassifier = DataClassifier()
     perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
 
     samples.readFiles()
-    percentdataset = 0
+    dataset = 0
+    featureValueListForAllTrainingImages, actualLabelForTrainingList = dataClassifier.extractFeatures(samples.train_lines_itr,
+                                                                                           samples.train_labelsLines_itr)
 
-    while percentdataset < 100:
-        featureValueListForAllTrainingImages, actualLabelList = dataClassifier.extractFeatures(samples.train_lines_itr, samples.train_labelsLines_itr, 100)
+    TOTALDATASET = len(featureValueListForAllTrainingImages)
+    INCREMENTS = int(TOTALDATASET * PERCENT_INCREMENT / 100)
+    PERCEPTRON_TIME = {}
 
-        if featureValueListForAllTrainingImages is None:
-            break
+    while dataset < TOTALDATASET:
 
-        for featureValueListPerImage, actualLabel in zip(featureValueListForAllTrainingImages, actualLabelList):
+        startTimer = time.time()
+
+        print("Training ON {0} to {1} data".format(dataset, dataset+INCREMENTS))
+        ImageLabelZipList = zip(featureValueListForAllTrainingImages[dataset:dataset+INCREMENTS], actualLabelForTrainingList[dataset:dataset+INCREMENTS])
+
+        for featureValueListPerImage, actualLabel in ImageLabelZipList:
             perceptronClassifier.runModel(True, featureValueListPerImage, actualLabel)
 
-        percentdataset += 10
-        print("Let's TEST our model that is TRAINED ON ", percentdataset, "%")
+        endTimer = time.time()
+
+        print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset+INCREMENTS))
 
         errorPrediction = 0
         total = 0
-        while total < 1000:
-            featureValueListForAllTestingImages, actualLabelList = dataClassifier.extractFeatures(samples.test_lines_itr, samples.test_labelsLines_itr, 1000)
+        featureValueListForAllTestingImages, actualLabelList = dataClassifier.extractFeatures(samples.test_lines_itr, samples.test_labelsLines_itr)
 
-            if featureValueListForAllTestingImages is None:
-                break
-
-            for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualLabelList):
-                errorPrediction += perceptronClassifier.runModel(False, featureValueListPerImage, actualLabel)
-                total += 1
+        for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualLabelList):
+            errorPrediction += perceptronClassifier.runModel(False, featureValueListPerImage, actualLabel)
+            total += 1
 
         samples.initTestIters()
 
-        print("Error is", errorPrediction, "out of Total of ", 1000)
-        print((errorPrediction * 100) / 1000, "%")
+        print("Error is", errorPrediction, "out of Total of ", total)
+        errorRate = (errorPrediction * 100) / total
+        print(errorRate, "%")
+        dataset += INCREMENTS
 
+        PERCEPTRON_TIME[dataset] = ((endTimer-startTimer), errorRate)
+
+
+    plt.plot([1,2,3],[2,3,4])
+    plt.ylabel('Error Rate')
+    plt.xlabel('DataSet')
+    plt.show()
+
+    print(PERCEPTRON_TIME)
     samples.closeFiles()
+
+

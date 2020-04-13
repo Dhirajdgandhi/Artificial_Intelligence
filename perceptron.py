@@ -3,8 +3,8 @@ import numpy as np
 
 class PerceptronClassifier:
     def __init__(self, FEATURES, LABELS):
-        SHAPE = (LABELS, FEATURES + 1)  # The +1 is for our w0 weight.
-        self.weightMatrix = np.ones(SHAPE)  # Randomized
+        self.SHAPE = (LABELS, FEATURES + 1)  # The +1 is for our w0 weight.
+        self.weightMatrix = np.zeros(self.SHAPE)
 
     def updateWeights(self, predictedLabel, actualLabel, featureValueList):
         # print("Updating Weights")
@@ -29,3 +29,7 @@ class PerceptronClassifier:
                 return 1
         else:
             return 0
+
+    def initWeightMatrix(self):
+        self.weightMatrix = np.zeros(self.SHAPE)  # Randomized
+
