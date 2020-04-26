@@ -1,5 +1,3 @@
-import math
-
 import numpy as np
 
 # Smotthing
@@ -12,14 +10,11 @@ class NaiveBayesClassifier:
     P_A = 'P(A)'
     P_B = 'P(B)'
 
-    def __init__(self, imgHeight=20, imgWidth=29, LABELS=10, pixelChars=None):
+    def __init__(self, FEATURES, LABELS, POSSIBLE_VALUES):
         self.LabelMap = {}
         self.FeatureMap = {}
-        self.pixelGrid = 1
-        self.imgHeight = imgHeight
-        self.FEATURES = math.ceil((imgHeight * imgWidth) / self.pixelGrid)
+        self.FEATURES = FEATURES
         self.LABELS = LABELS
-        self.pixelChars = pixelChars
 
         # Initialization of FMAP - FEATURES X LABELS X POSSIBLE_VALUES
         for featureIndex in range(self.FEATURES):
@@ -29,6 +24,9 @@ class NaiveBayesClassifier:
                 for possibleValueIndex in POSSIBLE_VALUES:
                     self.FeatureMap[featureIndex][labelIndex][possibleValueIndex] = 0
 
+        # Initialization
+        for labelIndex in range(0, self.LABELS):
+            self.LabelMap[labelIndex] = 0
 
     def P_A_given_B(self, map):
         result = ( map.get(NaiveBayesClassifier.P_B_GIVEN_A) * map.get(NaiveBayesClassifier.P_A) )\
@@ -37,23 +35,16 @@ class NaiveBayesClassifier:
 
     # Constructing Labels probability
     # PRIOR DISTRIBUTION OVER LABELS #
-    def constructLabelsProbability(self, labelsTestImages):
-        totalDataset = len(labelsTestImages)
-
-        # Initialization
-        for labelIndex in range(0, totalDataset):
-            self.LabelMap[labelIndex] = 1
+    def constructLabelsProbability(self, trainingLabels):
+        totalDataset = len(trainingLabels)
 
         # Storing Frequency
-        for label in labelsTestImages:
+        for label in trainingLabels:
             self.LabelMap[label] += 1
 
         # Calculating probability -> frequency/total
         for key in self.LabelMap:
             self.LabelMap[key] = self.LabelMap[key] / totalDataset
-
-        self.LABELS = len(self.LabelMap)
-        print(self.LabelMap)
 
     def constructFeaturesProbability(self, featureValueListForAllTrainingImages, actualLabelForTrainingList, POSSIBLE_VALUES):
 

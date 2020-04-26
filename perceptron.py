@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class PerceptronClassifier:
     def __init__(self, FEATURES, LABELS):
         self.SHAPE = (LABELS, FEATURES + 1)  # The +1 is for our w0 weight.
