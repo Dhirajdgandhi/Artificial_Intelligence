@@ -22,7 +22,7 @@ class PerceptronClassifier:
         predictedLabel = np.argmax(featureScoreList)
 
         if predictedLabel != actualLabel:
-            #print(predictedLabel, " ", actualLabel)
+            # print(predictedLabel, " ", actualLabel)
             if isTrain:
                 self.updateWeights(predictedLabel, actualLabel, featureValueList)
             else:

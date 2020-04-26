@@ -1,4 +1,5 @@
 DIGITDATA_DIR = "data/digitdata"
+FACEDATA_DIR = "data/facedata"
 
 trainingFileName = DIGITDATA_DIR + "/trainingimages"
 trainingLabelFileName = DIGITDATA_DIR + "/traininglabels"

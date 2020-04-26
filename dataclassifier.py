@@ -1,7 +1,7 @@
 import math
 import time
 import matplotlib.pyplot as plt
-
+from naivebyes import NaiveBayesClassifier
 from perceptron import PerceptronClassifier
 
 from samples import Samples
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     INCREMENTS = int(TOTALDATASET * PERCENT_INCREMENT / 100)
     PERCEPTRON_TIME = {}
 
-    while dataset < TOTALDATASET:
+    while dataset < 0:
 
         startTimer = time.time()
 
@@ -128,13 +128,22 @@ if __name__ == '__main__':
 
         PERCEPTRON_TIME[dataset] = ((endTimer-startTimer), errorRate)
 
+    print(PERCEPTRON_TIME)
 
-    plt.plot([1,2,3],[2,3,4])
+    # Naives Byes Algorithm
+    naiveBayesClassifier = NaiveBayesClassifier()
+    naiveBayesClassifier.constructLabelsProbability(actualLabelForTrainingList)
+    POSSIBLE_VALUES = 2 # BINARY
+    naiveBayesClassifier.constructFeaturesProbability(featureValueListForAllTrainingImages, actualLabelForTrainingList, POSSIBLE_VALUES)
+
+    samples.closeFiles()
+
+
+def dummyplot():
+    plt.plot([1, 2, 3], [2, 3, 4])
     plt.ylabel('Error Rate')
     plt.xlabel('DataSet')
     plt.show()
 
-    print(PERCEPTRON_TIME)
-    samples.closeFiles()
 
 
