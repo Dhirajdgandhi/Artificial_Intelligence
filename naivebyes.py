@@ -1,7 +1,5 @@
 import numpy as np
 
-# Smotthing
-kgrid = [0.001, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 20, 50]
 
 class NaiveBayesClassifier:
 
@@ -10,11 +8,15 @@ class NaiveBayesClassifier:
     P_A = 'P(A)'
     P_B = 'P(B)'
 
+    # Smotthing
+    kgrid = [0.001, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 20, 50]
+
     def __init__(self, FEATURES, LABELS, POSSIBLE_VALUES):
         self.LabelMap = {}
         self.FeatureMap = {}
         self.FEATURES = FEATURES
         self.LABELS = LABELS
+        self.K = 50
 
         # Initialization of FMAP - FEATURES X LABELS X POSSIBLE_VALUES
         for featureIndex in range(self.FEATURES):
@@ -58,12 +60,10 @@ class NaiveBayesClassifier:
             for labelIndex in range(self.LABELS):
                 sum = 0
                 for possibleValueIndex in POSSIBLE_VALUES:
-                    sum += self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + 5
+                    sum += self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + self.K
                 for possibleValueIndex in POSSIBLE_VALUES:
                     self.FeatureMap[featureIndex][labelIndex][possibleValueIndex] = \
-                        self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + 5 / sum
-
-        # print(self.FeatureMap)
+                        (self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + self.K) / sum
 
     def predictLabel_GivenFeatures(self, featuresListOfImage):
         probabilityPerLabel = []

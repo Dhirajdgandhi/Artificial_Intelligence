@@ -1,0 +1,48 @@
+"/Volumes/Files Documents/Rutgers/Acads/Massive Data Mining/project/TEAM7_550_PROJECT_CODE/venv/bin/python" /Applications/PyCharm.app/Contents/plugins/python/helpers/pydev/pydevconsole.py --mode=client --port=50945
+import sys; print('Python %s on %s' % (sys.version, sys.platform))
+sys.path.extend(['/Volumes/Files Documents/Academics and Projects/Engineering/7th Sem/7th sem/artificial intelligence/Rutgers/FinalProject'])
+PyDev console: starting.
+Python 3.5.2 (v3.5.2:4def2a2901a5, Jun 26 2016, 10:47:25)
+[GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin
+runfile('/Volumes/Files Documents/Academics and Projects/Engineering/7th Sem/7th sem/artificial intelligence/Rutgers/FinalProject/dataclassifier.py', wdir='/Volumes/Files Documents/Academics and Projects/Engineering/7th Sem/7th sem/artificial intelligence/Rutgers/FinalProject')
+TRAINING OUR MODEL FIRST
+ Training ON 0 to 500 data
+TESTING our model that is TRAINED ON 0 to 500 data
+Error is 443 out of Total of  1000  :  44.3
+Error is 409 out of Total of  1000  :  40.9
+ Training ON 500 to 1000 data
+TESTING our model that is TRAINED ON 0 to 1000 data
+Error is 393 out of Total of  1000  :  39.3
+Error is 333 out of Total of  1000  :  33.3
+ Training ON 1000 to 1500 data
+TESTING our model that is TRAINED ON 0 to 1500 data
+Error is 272 out of Total of  1000  :  27.2
+Error is 370 out of Total of  1000  :  37.0
+ Training ON 1500 to 2000 data
+TESTING our model that is TRAINED ON 0 to 2000 data
+Error is 218 out of Total of  1000  :  21.8
+Error is 353 out of Total of  1000  :  35.3
+ Training ON 2000 to 2500 data
+TESTING our model that is TRAINED ON 0 to 2500 data
+Error is 223 out of Total of  1000  :  22.3
+Error is 329 out of Total of  1000  :  32.9
+ Training ON 2500 to 3000 data
+TESTING our model that is TRAINED ON 0 to 3000 data
+Error is 189 out of Total of  1000  :  18.9
+Error is 333 out of Total of  1000  :  33.3
+ Training ON 3000 to 3500 data
+TESTING our model that is TRAINED ON 0 to 3500 data
+Error is 194 out of Total of  1000  :  19.4
+Error is 295 out of Total of  1000  :  29.5
+ Training ON 3500 to 4000 data
+TESTING our model that is TRAINED ON 0 to 4000 data
+Error is 201 out of Total of  1000  :  20.1
+Error is 345 out of Total of  1000  :  34.5
+ Training ON 4000 to 4500 data
+TESTING our model that is TRAINED ON 0 to 4500 data
+Error is 244 out of Total of  1000  :  24.4
+Error is 336 out of Total of  1000  :  33.6
+ Training ON 4500 to 5000 data
+TESTING our model that is TRAINED ON 0 to 5000 data
+Error is 185 out of Total of  1000  :  18.5
+Error is 355 out of Total of  1000  :  35.5

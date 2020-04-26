@@ -81,9 +81,8 @@ class DataClassifier:
 
 
 def error(errorPrediction, total):
-    print("Error is", errorPrediction, "out of Total of ", total)
     errorRate = (errorPrediction * 100) / total
-    print(errorRate, "%")
+    print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
 
 
 if __name__ == '__main__':
@@ -117,7 +116,7 @@ if __name__ == '__main__':
         featureValueList_currentTrainingImages = featureValueListForAllTrainingImages[dataset:dataset+INCREMENTS]
         actualLabel_currentTrainingImages = actualLabelForTrainingList[dataset:dataset+INCREMENTS]
 
-        print("Training ON {0} to {1} data".format(dataset, dataset+INCREMENTS))
+        print("\n\n\n\n\n Training ON {0} to {1} data".format(dataset, dataset+INCREMENTS))
         ImageFeatureLabelZipList = zip(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
 
         ''' ####################  TRAINING PHASE FOR PERCEPTRON ############# '''
