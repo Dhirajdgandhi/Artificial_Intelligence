@@ -1,4 +1,9 @@
+import math
+
 import numpy as np
+
+# Smotthing
+kgrid = [0.001, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 20, 50]
 
 class NaiveBayesClassifier:
 
@@ -7,11 +12,23 @@ class NaiveBayesClassifier:
     P_A = 'P(A)'
     P_B = 'P(B)'
 
-    def __init__(self):
+    def __init__(self, imgHeight=20, imgWidth=29, LABELS=10, pixelChars=None):
         self.LabelMap = {}
         self.FeatureMap = {}
-        self.FEATURES = 0
-        self.LABELS = 0
+        self.pixelGrid = 1
+        self.imgHeight = imgHeight
+        self.FEATURES = math.ceil((imgHeight * imgWidth) / self.pixelGrid)
+        self.LABELS = LABELS
+        self.pixelChars = pixelChars
+
+        # Initialization of FMAP - FEATURES X LABELS X POSSIBLE_VALUES
+        for featureIndex in range(self.FEATURES):
+            self.FeatureMap[featureIndex] = {}
+            for labelIndex in range(self.LABELS):
+                self.FeatureMap[featureIndex][labelIndex] = {}
+                for possibleValueIndex in POSSIBLE_VALUES:
+                    self.FeatureMap[featureIndex][labelIndex][possibleValueIndex] = 0
+
 
     def P_A_given_B(self, map):
         result = ( map.get(NaiveBayesClassifier.P_B_GIVEN_A) * map.get(NaiveBayesClassifier.P_A) )\
@@ -39,15 +56,6 @@ class NaiveBayesClassifier:
         print(self.LabelMap)
 
     def constructFeaturesProbability(self, featureValueListForAllTrainingImages, actualLabelForTrainingList, POSSIBLE_VALUES):
-        self.FEATURES = len(featureValueListForAllTrainingImages[0])
-
-        # Initialization of FMAP - FEATURES X LABELS X POSSIBLE_VALUES
-        for featureIndex in range(self.FEATURES):
-            self.FeatureMap[featureIndex] = {}
-            for labelIndex in range(self.LABELS):
-                self.FeatureMap[featureIndex][labelIndex] = {}
-                for possibleValueIndex in range(POSSIBLE_VALUES):
-                    self.FeatureMap[featureIndex][labelIndex][possibleValueIndex] = 0
 
         # TRAINING
         for label, featureValuesPerImage in zip(actualLabelForTrainingList, featureValueListForAllTrainingImages):
@@ -58,21 +66,21 @@ class NaiveBayesClassifier:
         for featureIndex in range(self.FEATURES):
             for labelIndex in range(self.LABELS):
                 sum = 0
-                for possibleValueIndex in range(POSSIBLE_VALUES):
-                    sum += self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex)
-                for possibleValueIndex in range(POSSIBLE_VALUES):
+                for possibleValueIndex in POSSIBLE_VALUES:
+                    sum += self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + 5
+                for possibleValueIndex in POSSIBLE_VALUES:
                     self.FeatureMap[featureIndex][labelIndex][possibleValueIndex] = \
-                        self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) / sum
+                        self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + 5 / sum
 
-        print(self.FeatureMap)
+        # print(self.FeatureMap)
 
-    def predictLabel_GivenFeatures(self, featuresListOfImage, actualLabel):
+    def predictLabel_GivenFeatures(self, featuresListOfImage):
         probabilityPerLabel = []
         for label in self.LabelMap:
             # P(Y=label|features)
             P_Y = self.LabelMap.get(label)
             P_features_given_Y = 1
-            for feature in self.FEATURES:
+            for feature in range(0, self.FEATURES):
                 P_features_given_Y = P_features_given_Y*self.FeatureMap[feature][label][featuresListOfImage[feature]]
             probability = P_Y * P_features_given_Y
             probabilityPerLabel.append(probability)
@@ -80,5 +88,9 @@ class NaiveBayesClassifier:
         predictedLabel = np.argmax(probabilityPerLabel)
         return predictedLabel
 
-    def trainModel(self):
-        self.predictLabel_GivenFeatures([], 1)
+    def testModel(self, featuresListOfImage, actualLabel):
+        predictedLabel = self.predictLabel_GivenFeatures(featuresListOfImage)
+        if predictedLabel != actualLabel:
+            return 1
+        else:
+            return 0

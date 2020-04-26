@@ -83,6 +83,7 @@ class DataClassifier:
 if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
     PERCENT_INCREMENT = 10
+    POSSIBLE_VALUES = 2
 
     samples = Samples()
     dataClassifier = DataClassifier()
@@ -90,14 +91,21 @@ if __name__ == '__main__':
 
     samples.readFiles()
     dataset = 0
-    featureValueListForAllTrainingImages, actualLabelForTrainingList = dataClassifier.extractFeatures(samples.train_lines_itr,
-                                                                                           samples.train_labelsLines_itr)
+    featureValueListForAllTrainingImages, actualLabelForTrainingList = \
+        dataClassifier.extractFeatures(samples.train_lines_itr, samples.train_labelsLines_itr)
+
+    # Naives Byes Algorithm
+    naiveBayesClassifier = NaiveBayesClassifier()
+    naiveBayesClassifier.constructLabelsProbability(actualLabelForTrainingList)
+    POSSIBLE_VALUES = [0, 1]  # BINARY
+    naiveBayesClassifier.constructFeaturesProbability(featureValueListForAllTrainingImages, actualLabelForTrainingList,
+                                                      POSSIBLE_VALUES)
 
     TOTALDATASET = len(featureValueListForAllTrainingImages)
     INCREMENTS = int(TOTALDATASET * PERCENT_INCREMENT / 100)
     PERCEPTRON_TIME = {}
 
-    while dataset < 0:
+    while dataset < TOTALDATASET:
 
         startTimer = time.time()
 
@@ -112,11 +120,13 @@ if __name__ == '__main__':
         print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset+INCREMENTS))
 
         errorPrediction = 0
+        errorPrediction1 = 0
         total = 0
         featureValueListForAllTestingImages, actualLabelList = dataClassifier.extractFeatures(samples.test_lines_itr, samples.test_labelsLines_itr)
 
         for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualLabelList):
             errorPrediction += perceptronClassifier.runModel(False, featureValueListPerImage, actualLabel)
+            # errorPrediction1 += naiveBayesClassifier.testModel(featureValueListPerImage, actualLabel)
             total += 1
 
         samples.initTestIters()
@@ -124,20 +134,16 @@ if __name__ == '__main__':
         print("Error is", errorPrediction, "out of Total of ", total)
         errorRate = (errorPrediction * 100) / total
         print(errorRate, "%")
+
+        print("Error is", errorPrediction1, "out of Total of ", total)
+        errorRate1 = (errorPrediction1 * 100) / total
+        print(errorRate1, "%")
+
         dataset += INCREMENTS
 
         PERCEPTRON_TIME[dataset] = ((endTimer-startTimer), errorRate)
 
-    print(PERCEPTRON_TIME)
-
-    # Naives Byes Algorithm
-    naiveBayesClassifier = NaiveBayesClassifier()
-    naiveBayesClassifier.constructLabelsProbability(actualLabelForTrainingList)
-    POSSIBLE_VALUES = 2 # BINARY
-    naiveBayesClassifier.constructFeaturesProbability(featureValueListForAllTrainingImages, actualLabelForTrainingList, POSSIBLE_VALUES)
-
     samples.closeFiles()
-
 
 def dummyplot():
     plt.plot([1, 2, 3], [2, 3, 4])
