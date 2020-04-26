@@ -1,20 +1,6 @@
-DIGITDATA_DIR = "data/digitdata"
-FACEDATA_DIR = "data/facedata"
-
-trainingFileName = DIGITDATA_DIR + "/trainingimages"
-trainingLabelFileName = DIGITDATA_DIR + "/traininglabels"
-testFileName = DIGITDATA_DIR + "/testimages"
-testLabelFileName = DIGITDATA_DIR + "/testlabels"
-validationFileName = DIGITDATA_DIR + "/validationimages"
-validationLabelFileName = DIGITDATA_DIR + "/validationlabels"
-
-TEST = "TEST"
-TRAIN = "TRAIN"
-VALIDATION = "VALIDATION"
-
-
 class Samples:
-    def __init__(self):
+
+    def __init__(self,DATA_DIR):
         self.TestFileObject = None
         self.TestLabelFileObject = None
         self.TrainFileObject = None
@@ -29,6 +15,18 @@ class Samples:
         self.validate_lines_itr = None
         self.validate_labelsLines_itr = None
 
+
+        self.trainingFileName = DATA_DIR + "/trainingimages"
+        self.trainingLabelFileName = DATA_DIR + "/traininglabels"
+        self.testFileName = DATA_DIR + "/testimages"
+        self.testLabelFileName = DATA_DIR + "/testlabels"
+        self.validationFileName = DATA_DIR + "/validationimages"
+        self.validationLabelFileName = DATA_DIR + "/validationlabels"
+
+        TEST = "TEST"
+        TRAIN = "TRAIN"
+        VALIDATION = "VALIDATION"
+
     def closeFiles(self):
         self.TestFileObject.close()
         self.TestLabelFileObject.close()
@@ -40,8 +38,8 @@ class Samples:
     def initTestIters(self):
         self.TestFileObject.close()
         self.TestLabelFileObject.close()
-        self.TestFileObject = open(testFileName)
-        self.TestLabelFileObject = open(testLabelFileName)
+        self.TestFileObject = open(self.testFileName)
+        self.TestLabelFileObject = open(self.testLabelFileName)
         self.test_lines_itr = iter(self.TestFileObject.readlines())
         self.test_labelsLines_itr = iter(self.TestLabelFileObject.readlines())
 
@@ -50,12 +48,12 @@ class Samples:
         self.validate_labelsLines_itr = iter(self.ValidationLabelFileObject.readlines())
 
     def readFiles(self):
-        self.TrainFileObject = open(trainingFileName)
-        self.TrainLabelFileObject = open(trainingLabelFileName)
-        self.TestFileObject = open(testFileName)
-        self.TestLabelFileObject = open(testLabelFileName)
-        self.ValidationFileObject = open(validationFileName)
-        self.ValidationLabelFileObject = open(validationLabelFileName)
+        self.TrainFileObject = open(self.trainingFileName)
+        self.TrainLabelFileObject = open(self.trainingLabelFileName)
+        self.TestFileObject = open(self.testFileName)
+        self.TestLabelFileObject = open(self.testLabelFileName)
+        self.ValidationFileObject = open(self.validationFileName)
+        self.ValidationLabelFileObject = open(self.validationLabelFileName)
 
         self.train_lines_itr = iter(self.TrainFileObject.readlines())
         self.train_labelsLines_itr = iter(self.TrainLabelFileObject.readlines())

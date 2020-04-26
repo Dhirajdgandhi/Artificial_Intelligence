@@ -8,7 +8,7 @@ from samples import Samples
 
 
 class DataClassifier:
-    def __init__(self, imgHeight=20, imgWidth=29, LABELS=10, pixelChars=None):
+    def __init__(self, imgHeight, imgWidth, LABELS, pixelChars):
         if pixelChars is None:
             pixelChars = ['#', '+']
         self.pixelGrid = 1
@@ -85,16 +85,39 @@ def error(errorPrediction, total):
     print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
 
 
+FACE = "FACE"
+DIGIT = "DIGIT"
+DIR = "DIR"
+HEIGHT = "HEIGHT"
+WIDTH = "WIDTH"
+LABEL= "LABEL"
+PIXELS="PIXELS"
+
+
 if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
     PERCENT_INCREMENT = 10
     POSSIBLE_VALUES = [0, 1]  # BINARY
 
-    # Reading the files
-    samples = Samples()
-    samples.readFiles()
 
-    dataClassifier = DataClassifier()
+
+    inp = input("Type FACE or DIGIT")
+
+    map = {
+        FACE: {
+            DIR: 'data/facedata', HEIGHT: 68, WIDTH: 61, LABEL: 2, PIXELS: None
+        },
+        DIGIT: {
+            DIR: 'data/digitdata', HEIGHT: 20, WIDTH: 29, LABEL: 10, PIXELS: None
+        }
+    }
+
+    samples = Samples(map.get(inp).get(DIR))
+
+    dataClassifier = DataClassifier(map.get(inp).get(HEIGHT),map.get(inp).get(WIDTH),map.get(inp).get(LABEL),map.get(inp).get(PIXELS))
+    #perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
+
+    samples.readFiles()
 
     # Extracting Features from the Training Data
     dataset = 0
