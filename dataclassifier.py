@@ -90,16 +90,13 @@ DIGIT = "DIGIT"
 DIR = "DIR"
 HEIGHT = "HEIGHT"
 WIDTH = "WIDTH"
-LABEL= "LABEL"
-PIXELS="PIXELS"
-
+LABEL = "LABEL"
+PIXELS = "PIXELS"
 
 if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
     PERCENT_INCREMENT = 10
     POSSIBLE_VALUES = [0, 1]  # BINARY
-
-
 
     inp = input("Type FACE or DIGIT")
 
@@ -112,10 +109,12 @@ if __name__ == '__main__':
         }
     }
 
-    samples = Samples(map.get(inp).get(DIR))
+    dataType = map.get(inp)
+    samples = Samples(dataType.get(DIR))
 
-    dataClassifier = DataClassifier(map.get(inp).get(HEIGHT),map.get(inp).get(WIDTH),map.get(inp).get(LABEL),map.get(inp).get(PIXELS))
-    #perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
+    dataClassifier = DataClassifier(dataType.get(HEIGHT), dataType.get(WIDTH), dataType.get(LABEL),
+                                    dataType.get(PIXELS))
+    perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
 
     samples.readFiles()
 
@@ -136,10 +135,10 @@ if __name__ == '__main__':
 
         startTimer = time.time()
 
-        featureValueList_currentTrainingImages = featureValueListForAllTrainingImages[dataset:dataset+INCREMENTS]
-        actualLabel_currentTrainingImages = actualLabelForTrainingList[dataset:dataset+INCREMENTS]
+        featureValueList_currentTrainingImages = featureValueListForAllTrainingImages[dataset:dataset + INCREMENTS]
+        actualLabel_currentTrainingImages = actualLabelForTrainingList[dataset:dataset + INCREMENTS]
 
-        print("\n\n\n\n\n Training ON {0} to {1} data".format(dataset, dataset+INCREMENTS))
+        print("\n\n\n\n\n Training ON {0} to {1} data".format(dataset, dataset + INCREMENTS))
         ImageFeatureLabelZipList = zip(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
 
         ''' ####################  TRAINING PHASE FOR PERCEPTRON ############# '''
@@ -157,7 +156,7 @@ if __name__ == '__main__':
         ''' ####################  TESTING PHASE ############# '''
         samples.initTestIters()
 
-        print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset+INCREMENTS))
+        print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset + INCREMENTS))
 
         perceptron_errorPrediction = naiveByes_errorPrediction = total = 0
         featureValueListForAllTestingImages, actualLabelList = \
@@ -175,11 +174,9 @@ if __name__ == '__main__':
 
     samples.closeFiles()
 
+
 def dummyplot():
     plt.plot([1, 2, 3], [2, 3, 4])
     plt.ylabel('Error Rate')
     plt.xlabel('DataSet')
     plt.show()
-
-
-
