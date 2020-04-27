@@ -1,7 +1,7 @@
 import math
 import time
 
-import knn as knn
+from knn import KNN
 import matplotlib.pyplot as plt
 from naivebyes import NaiveBayesClassifier
 from perceptron import PerceptronClassifier
@@ -134,6 +134,7 @@ if __name__ == '__main__':
     # Initialization of Classifiers
     perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
     naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, POSSIBLE_VALUES)
+    KNNClassifier = KNN(num_neighbors=dataType.get(LABEL))
 
     featureValueListForAllTestingImages = actualTestingLabelList = []
     while dataset < TOTALDATASET:
@@ -162,13 +163,9 @@ if __name__ == '__main__':
 
         bayes_time.append(endTimer - startTimer)
 
-        startTimer = time.time()
-        ''' ################## TRAINING PHASE FOR KNN #################  '''
-        k = knn.KNN()
-        k.train(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
-        endTimer = time.time()
-
-        knn_time.append(endTimer - startTimer)
+        ''' ################## NO TRAINING PHASE FOR KNN #################  '''
+        KNNClassifier.storeTrainingSet(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
+        ''' SIMPLY STORING FOR KNN '''
 
         ''' ####################  TESTING PHASE ############# '''
         samples.initTestIters()
@@ -182,9 +179,17 @@ if __name__ == '__main__':
         for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualTestingLabelList):
             perceptron_errorPrediction += perceptronClassifier.runModel(False, featureValueListPerImage, actualLabel)
             naiveByes_errorPrediction += naiveBayesClassifier.testModel(featureValueListPerImage, actualLabel)
-            knn_errorPrediction += k.test(featureValueListPerImage, actualLabel)
-            total += 1
 
+            ''' ####################  TESTING PHASE FOR KNN ############# '''
+            startTimer = time.time()
+
+            knn_errorPrediction += KNNClassifier.test(featureValueListPerImage, actualLabel)
+
+            endTimer = time.time()
+            knn_time.append(endTimer - startTimer)
+            ''' ####################  TESTING PHASE OVER FOR KNN ############# '''
+
+            total += 1
 
         perceptron_error = error(perceptron_errorPrediction, total)
         bayes_error = error(naiveByes_errorPrediction, total)
