@@ -99,7 +99,14 @@ if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
     PERCENT_INCREMENT = 10
     POSSIBLE_VALUES = [0, 1]  # BINARY
-    perceptron_y = bayes_y =  knn_y = dataSetIncrements = perceptron_time = bayes_time = knn_time = []
+
+    perceptron_y = []
+    bayes_y =  []
+    knn_y = []
+    dataSetIncrements = []
+    perceptron_time = []
+    bayes_time = []
+    knn_time = []
 
     inp = input("Type FACE or DIGIT")
 
@@ -134,7 +141,7 @@ if __name__ == '__main__':
     # Initialization of Classifiers
     perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
     naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, POSSIBLE_VALUES)
-    KNNClassifier = KNN(num_neighbors=dataType.get(LABEL))
+    KNNClassifier = KNN(num_neighbors=20)
 
     featureValueListForAllTestingImages = actualTestingLabelList = []
     while dataset < TOTALDATASET:
