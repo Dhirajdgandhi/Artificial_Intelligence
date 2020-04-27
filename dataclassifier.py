@@ -98,7 +98,8 @@ if __name__ == '__main__':
     PERCENT_INCREMENT = 10
     POSSIBLE_VALUES = [0, 1]  # BINARY
 
-    inp = input("Type FACE or DIGIT")
+    # inp = input("Type FACE or DIGIT")
+    inp = FACE
 
     map = {
         FACE: {
@@ -131,6 +132,7 @@ if __name__ == '__main__':
     perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
     naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, POSSIBLE_VALUES)
 
+    featureValueListForAllTestingImages = actualTestingLabelList = []
     while dataset < TOTALDATASET:
 
         startTimer = time.time()
@@ -159,10 +161,10 @@ if __name__ == '__main__':
         print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset + INCREMENTS))
 
         perceptron_errorPrediction = naiveByes_errorPrediction = total = 0
-        featureValueListForAllTestingImages, actualLabelList = \
+        featureValueListForAllTestingImages, actualTestingLabelList = \
             dataClassifier.extractFeatures(samples.test_lines_itr, samples.test_labelsLines_itr)
 
-        for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualLabelList):
+        for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualTestingLabelList):
             perceptron_errorPrediction += perceptronClassifier.runModel(False, featureValueListPerImage, actualLabel)
             naiveByes_errorPrediction += naiveBayesClassifier.testModel(featureValueListPerImage, actualLabel)
             total += 1
@@ -171,6 +173,14 @@ if __name__ == '__main__':
         error(naiveByes_errorPrediction, total)
 
         dataset += INCREMENTS
+
+    from sklearn.svm import SVC
+    from sklearn.metrics import accuracy_score
+
+    clf = SVC(kernel='linear')
+    clf.fit(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
+    y_pred = clf.predict(featureValueListForAllTestingImages)
+    print(accuracy_score(actualTestingLabelList, y_pred))
 
     samples.closeFiles()
 
