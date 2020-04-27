@@ -3,7 +3,7 @@ import time
 import matplotlib.pyplot as plt
 from naivebyes import NaiveBayesClassifier
 from perceptron import PerceptronClassifier
-
+from error_plot import Error
 from samples import Samples
 
 
@@ -83,7 +83,7 @@ class DataClassifier:
 def error(errorPrediction, total):
     errorRate = (errorPrediction * 100) / total
     print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
-
+    return errorRate
 
 FACE = "FACE"
 DIGIT = "DIGIT"
@@ -97,9 +97,12 @@ if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
     PERCENT_INCREMENT = 10
     POSSIBLE_VALUES = [0, 1]  # BINARY
+    perceptron_y=[]
+    bayes_y=[]
+    x=[]
 
-    # inp = input("Type FACE or DIGIT")
-    inp = FACE
+    inp = input("Type FACE or DIGIT")
+
 
     map = {
         FACE: {
@@ -171,6 +174,11 @@ if __name__ == '__main__':
 
         error(perceptron_errorPrediction, total)
         error(naiveByes_errorPrediction, total)
+        perceptron_error = error(perceptron_errorPrediction, total)
+        bayes_error = error(naiveByes_errorPrediction, total)
+        x.append(dataset)
+        perceptron_y.append(perceptron_error)
+        bayes_y.append(bayes_error)
 
         dataset += INCREMENTS
 
@@ -182,11 +190,9 @@ if __name__ == '__main__':
     y_pred = clf.predict(featureValueListForAllTestingImages)
     print(accuracy_score(actualTestingLabelList, y_pred))
 
+    final_array = {
+        1: [perceptron_y, bayes_y], 2: ["Perceptron", "Bayes"]
+    }
+    Error(x, final_array.get(1), final_array.get(2), inp)
+
     samples.closeFiles()
-
-
-def dummyplot():
-    plt.plot([1, 2, 3], [2, 3, 4])
-    plt.ylabel('Error Rate')
-    plt.xlabel('DataSet')
-    plt.show()
