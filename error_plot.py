@@ -1,21 +1,19 @@
 import matplotlib.pyplot as plt
+from matplotlib import pyplot
+
 
 class Error:
 
-    def __init__(self,dataset,rate,type,method):
-        self.rate=rate
-        self.dataset=dataset
-        self.type=type
-        self.method=method
-        self.graphplot(self.dataset, self.rate,self.type,self.method)
+    def graphplot(self, dataset, errorRateList, type, method):
+        for i in range(len(errorRateList)):
+            plt.plot(dataset, errorRateList[i], label=type[i])
+            plt.xlim(0, dataset[-1] + dataset[-1]/10)
+            plt.ylim(0, 100)
 
+        for i in range(len(errorRateList)):
+            for data, errorRate in zip(dataset, errorRateList[i]):
+                pyplot.text(data, errorRate, str(int(errorRate)))
 
-    def graphplot(self,a,b,c,d):
-        p=len(b)
-        for i in range(p):
-            plt.plot(a,b[i],label=c[i])
-            plt.xlim(500,5000)
-            plt.ylim(0,100)
-        plt.title(d)
+        plt.title(method)
         plt.legend()
         plt.show()

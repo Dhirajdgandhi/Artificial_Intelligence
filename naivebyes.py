@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -44,9 +45,10 @@ class NaiveBayesClassifier:
         for label in trainingLabels:
             self.LabelMap[label] += 1
 
-        # Calculating probability -> frequency/total
+        # Calculating probability -> frequency/total -> LOG
         for key in self.LabelMap:
-            self.LabelMap[key] = self.LabelMap[key] / totalDataset
+            probability = self.LabelMap[key] / totalDataset
+            self.LabelMap[key] = probability
 
     def constructFeaturesProbability(self, featureValueListForAllTrainingImages, actualLabelForTrainingList, POSSIBLE_VALUES):
 
@@ -55,25 +57,25 @@ class NaiveBayesClassifier:
             for feature in range(0, self.FEATURES):
                 self.FeatureMap[feature][label][featureValuesPerImage[feature]] += 1
 
-        # Converting frequencies to probabilities
+        # Converting frequencies to probabilities to it's LOG
         for featureIndex in range(self.FEATURES):
             for labelIndex in range(self.LABELS):
                 sum = 0
                 for possibleValueIndex in POSSIBLE_VALUES:
                     sum += self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + self.K
                 for possibleValueIndex in POSSIBLE_VALUES:
-                    self.FeatureMap[featureIndex][labelIndex][possibleValueIndex] = \
-                        (self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + self.K) / sum
+                    probability = (self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + self.K) / sum
+                    self.FeatureMap[featureIndex][labelIndex][possibleValueIndex] = probability
 
     def predictLabel_GivenFeatures(self, featuresListOfImage):
         probabilityPerLabel = []
         for label in self.LabelMap:
             # P(Y=label|features)
             P_Y = self.LabelMap.get(label)
-            P_features_given_Y = 1
+            P_features_given_Y = 0
             for feature in range(0, self.FEATURES):
-                P_features_given_Y = P_features_given_Y*self.FeatureMap[feature][label][featuresListOfImage[feature]]
-            probability = P_Y * P_features_given_Y
+                P_features_given_Y += math.log(self.FeatureMap[feature][label][featuresListOfImage[feature]])
+            probability = math.log(P_Y, 2) + P_features_given_Y
             probabilityPerLabel.append(probability)
 
         predictedLabel = np.argmax(probabilityPerLabel)

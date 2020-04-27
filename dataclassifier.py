@@ -172,27 +172,28 @@ if __name__ == '__main__':
             naiveByes_errorPrediction += naiveBayesClassifier.testModel(featureValueListPerImage, actualLabel)
             total += 1
 
-        error(perceptron_errorPrediction, total)
-        error(naiveByes_errorPrediction, total)
         perceptron_error = error(perceptron_errorPrediction, total)
         bayes_error = error(naiveByes_errorPrediction, total)
+
+        dataset += INCREMENTS
+
         x.append(dataset)
         perceptron_y.append(perceptron_error)
         bayes_y.append(bayes_error)
 
-        dataset += INCREMENTS
 
-    from sklearn.svm import SVC
-    from sklearn.metrics import accuracy_score
-
-    clf = SVC(kernel='linear')
-    clf.fit(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
-    y_pred = clf.predict(featureValueListForAllTestingImages)
-    print(accuracy_score(actualTestingLabelList, y_pred))
+    # from sklearn.svm import SVC
+    # from sklearn.metrics import accuracy_score
+    #
+    # clf = SVC(kernel='linear')
+    # clf.fit(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
+    # y_pred = clf.predict(featureValueListForAllTestingImages)
+    # print(accuracy_score(actualTestingLabelList, y_pred))
 
     final_array = {
         1: [perceptron_y, bayes_y], 2: ["Perceptron", "Bayes"]
     }
-    Error(x, final_array.get(1), final_array.get(2), inp)
+    error = Error()
+    error.graphplot(x, final_array.get(1), final_array.get(2), inp)
 
     samples.closeFiles()
