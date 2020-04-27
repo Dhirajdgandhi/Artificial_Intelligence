@@ -1,5 +1,7 @@
 import math
 import time
+
+import knn as knn
 import matplotlib.pyplot as plt
 from naivebyes import NaiveBayesClassifier
 from perceptron import PerceptronClassifier
@@ -97,9 +99,7 @@ if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
     PERCENT_INCREMENT = 10
     POSSIBLE_VALUES = [0, 1]  # BINARY
-    perceptron_y=[]
-    bayes_y=[]
-    x=[]
+    perceptron_y = bayes_y =  knn_y = dataSetIncrements = perceptron_time = bayes_time = knn_time = []
 
     inp = input("Type FACE or DIGIT")
 
@@ -138,62 +138,76 @@ if __name__ == '__main__':
     featureValueListForAllTestingImages = actualTestingLabelList = []
     while dataset < TOTALDATASET:
 
-        startTimer = time.time()
-
         featureValueList_currentTrainingImages = featureValueListForAllTrainingImages[dataset:dataset + INCREMENTS]
         actualLabel_currentTrainingImages = actualLabelForTrainingList[dataset:dataset + INCREMENTS]
 
         print("\n\n\n\n\n Training ON {0} to {1} data".format(dataset, dataset + INCREMENTS))
         ImageFeatureLabelZipList = zip(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
 
+        startTimer = time.time()
         ''' ####################  TRAINING PHASE FOR PERCEPTRON ############# '''
         for featureValueListPerImage, actualLabel in ImageFeatureLabelZipList:
             perceptronClassifier.runModel(True, featureValueListPerImage, actualLabel)
+        endTimer = time.time()
 
+        perceptron_time.append(endTimer - startTimer)
+
+        startTimer = time.time()
         ''' ####################  TRAINING PHASE FOR NAIVE BYES ############# '''
         naiveBayesClassifier.constructLabelsProbability(actualLabel_currentTrainingImages)
         naiveBayesClassifier.constructFeaturesProbability(featureValueList_currentTrainingImages,
                                                           actualLabel_currentTrainingImages,
                                                           POSSIBLE_VALUES)
-
         endTimer = time.time()
+
+        bayes_time.append(endTimer - startTimer)
+
+        startTimer = time.time()
+        ''' ################## TRAINING PHASE FOR KNN #################  '''
+        k = knn.KNN()
+        k.train(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
+        endTimer = time.time()
+
+        knn_time.append(endTimer - startTimer)
 
         ''' ####################  TESTING PHASE ############# '''
         samples.initTestIters()
 
         print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset + INCREMENTS))
 
-        perceptron_errorPrediction = naiveByes_errorPrediction = total = 0
+        perceptron_errorPrediction = naiveByes_errorPrediction = knn_errorPrediction = total = 0
         featureValueListForAllTestingImages, actualTestingLabelList = \
             dataClassifier.extractFeatures(samples.test_lines_itr, samples.test_labelsLines_itr)
 
         for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualTestingLabelList):
             perceptron_errorPrediction += perceptronClassifier.runModel(False, featureValueListPerImage, actualLabel)
             naiveByes_errorPrediction += naiveBayesClassifier.testModel(featureValueListPerImage, actualLabel)
+            knn_errorPrediction += k.test(featureValueListPerImage, actualLabel)
             total += 1
+
 
         perceptron_error = error(perceptron_errorPrediction, total)
         bayes_error = error(naiveByes_errorPrediction, total)
+        knn_error = error(knn_errorPrediction, total)
 
         dataset += INCREMENTS
 
-        x.append(dataset)
+        dataSetIncrements.append(dataset)
         perceptron_y.append(perceptron_error)
         bayes_y.append(bayes_error)
-
-
-    # from sklearn.svm import SVC
-    # from sklearn.metrics import accuracy_score
-    #
-    # clf = SVC(kernel='linear')
-    # clf.fit(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
-    # y_pred = clf.predict(featureValueListForAllTestingImages)
-    # print(accuracy_score(actualTestingLabelList, y_pred))
+        knn_y.append(knn_error)
 
     final_array = {
-        1: [perceptron_y, bayes_y], 2: ["Perceptron", "Bayes"]
+        1: [perceptron_y, bayes_y, knn_y],
+        2: ["Perceptron", "Bayes", "KNN"]
     }
+
+    final_array2 = {
+        1: [perceptron_time, bayes_time, knn_time],
+        2: ["Perceptron", "Bayes", "KNN"]
+    }
+
     error = Error()
-    error.graphplot(x, final_array.get(1), final_array.get(2), inp)
+    error.graphplot(dataSetIncrements, final_array.get(1), final_array.get(2), inp)
 
     samples.closeFiles()
