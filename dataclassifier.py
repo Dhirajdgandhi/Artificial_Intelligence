@@ -1,10 +1,12 @@
 import math
 import time
+import numpy as np
 import matplotlib.pyplot as plt
 from naivebyes import NaiveBayesClassifier
 from perceptron import PerceptronClassifier
-
 from samples import Samples
+from error_plot import Error
+
 
 
 class DataClassifier:
@@ -79,10 +81,10 @@ class DataClassifier:
 
         return featureValueListForAllTestingImages, actualLabelList
 
-
 def error(errorPrediction, total):
     errorRate = (errorPrediction * 100) / total
     print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
+    return errorRate
 
 
 FACE = "FACE"
@@ -99,6 +101,16 @@ if __name__ == '__main__':
     PERCENT_INCREMENT = 10
     POSSIBLE_VALUES = [0, 1]  # BINARY
 
+    # prediction_types = {
+    #     1: "PERCEPTRON", 2: "NAIVE BAYES"
+    # }
+    # for i in prediction_types:
+    #     a = prediction_types.get(i) + "_x"
+    #     print(a)
+    #     a = np.array([])
+    perceptron_y=[]
+    bayes_y=[]
+    x = []
 
 
     inp = input("Type FACE or DIGIT")
@@ -126,11 +138,13 @@ if __name__ == '__main__':
 
     TOTALDATASET = len(actualLabelForTrainingList)
     INCREMENTS = int(TOTALDATASET * PERCENT_INCREMENT / 100)
-    PERCEPTRON_TIME = {}
+
 
     # Initialization of Classifiers
     perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
     naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, POSSIBLE_VALUES)
+
+    start_again=time.time()
 
     while dataset < TOTALDATASET:
 
@@ -146,6 +160,7 @@ if __name__ == '__main__':
         for featureValueListPerImage, actualLabel in ImageFeatureLabelZipList:
             perceptronClassifier.runModel(True, featureValueListPerImage, actualLabel)
 
+
         ''' ####################  TRAINING PHASE FOR NAIVE BYES ############# '''
         naiveBayesClassifier.constructLabelsProbability(actualLabel_currentTrainingImages)
         naiveBayesClassifier.constructFeaturesProbability(featureValueList_currentTrainingImages,
@@ -153,6 +168,7 @@ if __name__ == '__main__':
                                                           POSSIBLE_VALUES)
 
         endTimer = time.time()
+
 
         ''' ####################  TESTING PHASE ############# '''
         samples.initTestIters()
@@ -168,18 +184,23 @@ if __name__ == '__main__':
             naiveByes_errorPrediction += naiveBayesClassifier.testModel(featureValueListPerImage, actualLabel)
             total += 1
 
-        error(perceptron_errorPrediction, total)
-        error(naiveByes_errorPrediction, total)
+        perceptron_error = error(perceptron_errorPrediction, total)
+        bayes_error = error(naiveByes_errorPrediction, total)
+        x.append(dataset)
+        perceptron_y.append(perceptron_error)
+        bayes_y.append(bayes_error)
+
 
         dataset += INCREMENTS
 
+    final_array={
+        1:[perceptron_y,bayes_y],2:["Perceptron","Bayes"]
+    }
+    Error(x,final_array.get(1),final_array.get(2),inp)
+    end_again=time.time()
+    print("final time is ",end_again-start_again," TOTAL IS ",total)
     samples.closeFiles()
 
-def dummyplot():
-    plt.plot([1, 2, 3], [2, 3, 4])
-    plt.ylabel('Error Rate')
-    plt.xlabel('DataSet')
-    plt.show()
 
 
 
