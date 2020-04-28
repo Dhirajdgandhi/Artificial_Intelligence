@@ -2,7 +2,7 @@ import numpy as np
 
 class PerceptronClassifier:
     def __init__(self, FEATURES, LABELS):
-        self.SHAPE = (LABELS, FEATURES + 1)  # The +1 is for our w0 weight.
+        self.SHAPE = (LABELS, FEATURES )  # The +1 is for our w0 weight.
         self.weightMatrix = np.zeros(self.SHAPE)
 
     def updateWeights(self, predictedLabel, actualLabel, featureValueList):

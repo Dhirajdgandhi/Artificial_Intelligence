@@ -1,6 +1,6 @@
 class Samples:
 
-    def __init__(self,DATA_DIR):
+    def __init__(self, DATA_DIR):
         self.TestFileObject = None
         self.TestLabelFileObject = None
         self.TrainFileObject = None
@@ -26,6 +26,18 @@ class Samples:
         TEST = "TEST"
         TRAIN = "TRAIN"
         VALIDATION = "VALIDATION"
+
+    # def open_many_files(self,file_name):
+    #     with open(self.name, 'r') as f:
+    #         c = 0
+    #         for l in f:
+    #             c+=1
+    #         l=c+1-self.k_value
+    #         for i in range(0,l):
+    #             lines = [line for line in f][:self.k_value]
+    #             object=lines
+    #         return object
+
 
     def closeFiles(self):
         self.TestFileObject.close()

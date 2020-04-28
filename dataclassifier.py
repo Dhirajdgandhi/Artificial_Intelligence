@@ -10,12 +10,13 @@ from samples import Samples
 
 
 class DataClassifier:
-    def __init__(self, imgHeight, imgWidth, LABELS, pixelChars):
+    def __init__(self, imgHeight, imgWidth, LABELS, pixelChars, pixelGrid):
         if pixelChars is None:
             pixelChars = ['#', '+']
-        self.pixelGrid = 1
+        self.pixelGrid = pixelGrid
         self.imgHeight = imgHeight
-        self.FEATURES = math.ceil((imgHeight * imgWidth) / self.pixelGrid)
+        self.imgWidth = imgWidth
+        self.FEATURES = math.ceil((imgHeight - self.pixelGrid + 1) * (imgWidth - self.pixelGrid + 1))
         self.LABELS = LABELS
         self.pixelChars = pixelChars
         self.FileObject = None
@@ -47,6 +48,29 @@ class DataClassifier:
 
         return featureValueList
 
+    def splitImageLineFeaturesIntoGridFeatures(self, imageLinesList, gridSize):
+        height_rows = self.imgHeight + 1 - gridSize
+        width_rows = self.imgWidth + 1 - gridSize
+        height_new_list = []
+
+        for rowIndex in range(0, self.imgHeight):
+            line = imageLinesList[rowIndex]
+            width_new_list = []
+            for gridStartIndex in range(0, width_rows):
+                width_new_list.append(sum(line[gridStartIndex: gridStartIndex+gridSize]))
+            height_new_list.append(width_new_list)
+
+        featureListForImage = []
+        for rowIndex in range(0, height_rows):
+            for column in range(0, width_rows):
+                sum1 = 0
+                for rows in range(0,gridSize):
+                    sum1 += height_new_list[rowIndex+rows][column]
+                featureListForImage.append(sum1)
+
+        return featureListForImage
+
+
     def extractFeatures(self, lines_itr, labelsLines_itr):
         imageLine = lines_itr.__next__()
 
@@ -61,11 +85,14 @@ class DataClassifier:
                 while imageLine and self.countPixels(imageLine) == 0:
                     imageLine = lines_itr.__next__()
 
+                imageLinesList = []
                 # Scanning image pixels
                 for i in range(0, self.imgHeight):
-                    featureValueListPerImage.extend(self.extractFeaturesPerLine(imageLine, i))
+                    imageLinesList.append(self.extractFeaturesPerLine(imageLine, i))
                     # print(featureValueList)
                     imageLine = lines_itr.__next__()
+
+                featureValueListPerImage = self.splitImageLineFeaturesIntoGridFeatures(imageLinesList, gridSize)
 
                 totalImages += 1
                 actualLabel = labelsLines_itr.__next__()
@@ -98,7 +125,6 @@ PIXELS = "PIXELS"
 if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
     PERCENT_INCREMENT = 10
-    POSSIBLE_VALUES = [0, 1]  # BINARY
 
     perceptron_y = []
     bayes_y =  []
@@ -109,7 +135,8 @@ if __name__ == '__main__':
     knn_time = []
 
     inp = input("Type FACE or DIGIT")
-
+    gridSize = int(input("Value of Grid"))
+    POSSIBLE_VALUES = [x for x in range(0, gridSize*gridSize + 1)]
 
     map = {
         FACE: {
@@ -124,7 +151,7 @@ if __name__ == '__main__':
     samples = Samples(dataType.get(DIR))
 
     dataClassifier = DataClassifier(dataType.get(HEIGHT), dataType.get(WIDTH), dataType.get(LABEL),
-                                    dataType.get(PIXELS))
+                                    dataType.get(PIXELS), gridSize)
     perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
 
     samples.readFiles()
