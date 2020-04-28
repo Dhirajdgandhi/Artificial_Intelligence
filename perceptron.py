@@ -1,8 +1,9 @@
 import numpy as np
 
+
 class PerceptronClassifier:
     def __init__(self, FEATURES, LABELS):
-        self.SHAPE = (LABELS, FEATURES )  # The +1 is for our w0 weight.
+        self.SHAPE = (LABELS, FEATURES + 1)  # The +1 is for our w0 weight.
         self.weightMatrix = np.zeros(self.SHAPE)
 
     def updateWeights(self, predictedLabel, actualLabel, featureValueList):
@@ -14,6 +15,7 @@ class PerceptronClassifier:
 
     def runModel(self, isTrain, featureValueList, actualLabel):
         featureScoreList = []
+        featureValueList = [1] + featureValueList # The [1] + is to accommodate the bias weight - w0
         for labelWeights in self.weightMatrix:
             featureScoreList.append(np.sum(np.dot(labelWeights, featureValueList)))
 

@@ -57,25 +57,23 @@ class DataClassifier:
             line = imageLinesList[rowIndex]
             width_new_list = []
             for gridStartIndex in range(0, width_rows):
-                width_new_list.append(sum(line[gridStartIndex: gridStartIndex+gridSize]))
+                width_new_list.append(sum(line[gridStartIndex: gridStartIndex + gridSize]))
             height_new_list.append(width_new_list)
 
         featureListForImage = []
         for rowIndex in range(0, height_rows):
             for column in range(0, width_rows):
                 sum1 = 0
-                for rows in range(0,gridSize):
-                    sum1 += height_new_list[rowIndex+rows][column]
+                for rows in range(0, gridSize):
+                    sum1 += height_new_list[rowIndex + rows][column]
                 featureListForImage.append(sum1)
 
         return featureListForImage
-
 
     def extractFeatures(self, lines_itr, labelsLines_itr):
         imageLine = lines_itr.__next__()
 
         totalImages = 0
-        featureValueListPerImage = [1]
         featureValueListForAllTestingImages = []
         actualLabelList = []
 
@@ -100,8 +98,6 @@ class DataClassifier:
                 featureValueListForAllTestingImages.append(featureValueListPerImage)
                 actualLabelList.append(int(actualLabel))
 
-                # Re-init the feature score
-                featureValueListPerImage = [1]
         except StopIteration:
             # print("End of File")
             pass
@@ -113,6 +109,7 @@ def error(errorPrediction, total):
     errorRate = (errorPrediction * 100) / total
     print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
     return errorRate
+
 
 FACE = "FACE"
 DIGIT = "DIGIT"
@@ -127,7 +124,7 @@ if __name__ == '__main__':
     PERCENT_INCREMENT = 10
 
     perceptron_y = []
-    bayes_y =  []
+    bayes_y = []
     knn_y = []
     dataSetIncrements = []
     perceptron_time = []
@@ -136,7 +133,7 @@ if __name__ == '__main__':
 
     inp = input("Type FACE or DIGIT")
     gridSize = int(input("Value of Grid"))
-    POSSIBLE_VALUES = [x for x in range(0, gridSize*gridSize + 1)]
+    POSSIBLE_VALUES = [x for x in range(0, gridSize * gridSize + 1)]
 
     map = {
         FACE: {

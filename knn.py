@@ -17,8 +17,8 @@ class KNN:
             return 1
 
     def storeTrainingSet(self, x, y):
-        self.trainX = x
-        self.trainY = y
+        self.trainX += x
+        self.trainY += y
 
     # Locate the most similar neighbors
     def get_neighbors(self, test_row):
