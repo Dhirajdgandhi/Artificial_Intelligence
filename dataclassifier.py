@@ -37,8 +37,8 @@ class DataClassifier:
         gridList = []
         featureValueList = []
 
-        for startIndexOfGrid in range(0, len(line), self.pixelGrid):
-            gridList.append(line[startIndexOfGrid:startIndexOfGrid + self.pixelGrid])
+        for startIndexOfGrid in range(0, len(line), 1):
+            gridList.append(line[startIndexOfGrid:startIndexOfGrid + 1])
 
         # col = 0
         for grid in gridList:
