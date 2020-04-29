@@ -16,8 +16,8 @@ class Samples:
         self.validate_labelsLines_itr = None
 
 
-        self.trainingFileName = DATA_DIR + "/trainingimages"
-        self.trainingLabelFileName = DATA_DIR + "/traininglabels"
+        self.trainingFileName = DATA_DIR + "/finalimages"
+        self.trainingLabelFileName = DATA_DIR + "/finallabels"
         self.testFileName = DATA_DIR + "/testimages"
         self.testLabelFileName = DATA_DIR + "/testlabels"
         self.validationFileName = DATA_DIR + "/validationimages"
