@@ -17,7 +17,7 @@ class NaiveBayesClassifier:
         self.FeatureMap = {}
         self.FEATURES = FEATURES
         self.LABELS = LABELS
-        self.K = 2
+        self.K = 0.001
 
         # Initialization of FMAP - FEATURES X LABELS X POSSIBLE_VALUES
         for featureIndex in range(self.FEATURES):

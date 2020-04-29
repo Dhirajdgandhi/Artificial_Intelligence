@@ -1,12 +1,20 @@
 import math
 import time
-
+import statistics
 from knn import KNN
 import matplotlib.pyplot as plt
 from naivebyes import NaiveBayesClassifier
 from perceptron import PerceptronClassifier
 from error_plot import Error
 from samples import Samples
+
+
+def mean_standard_deviation(errorRate, name):
+    if len(errorRate) > 1:
+        mean = statistics.mean(errorRate)
+        standard_deviation = statistics.stdev(errorRate)
+        print(name, " mean = ", mean, " and Standard Deviation = ", standard_deviation)
+        return mean
 
 
 class DataClassifier:
@@ -130,6 +138,9 @@ if __name__ == '__main__':
     perceptron_time = []
     bayes_time = []
     knn_time = []
+    perceptron_msd=[]
+    bayes_msd=[]
+    knn_msd=[]
 
     inp = input("Type FACE or DIGIT")
     gridSize = int(input("Value of Grid"))
@@ -225,6 +236,13 @@ if __name__ == '__main__':
         perceptron_error = error(perceptron_errorPrediction, total)
         bayes_error = error(naiveByes_errorPrediction, total)
         knn_error = error(knn_errorPrediction, total)
+        perceptron_msd.append(perceptron_error)
+        bayes_msd.append(bayes_error)
+        knn_msd.append(knn_error)
+
+        perceptron_msd_graph = mean_standard_deviation(perceptron_msd,"Perceptron")
+        bayes_msd_graph = mean_standard_deviation(bayes_msd,"Bayes")
+        knn_msd_graph = mean_standard_deviation(knn_msd,"KNN")
 
         dataset += INCREMENTS
 
@@ -243,7 +261,15 @@ if __name__ == '__main__':
         2: ["Perceptron", "Bayes", "KNN"]
     }
 
+    final_array3 = {
+        1: [perceptron_msd_graph, bayes_msd_graph, knn_msd_graph],
+        2: ["Perceptron", "Bayes", "KNN"]
+    }
+
     error = Error()
-    error.graphplot(dataSetIncrements, final_array.get(1), final_array.get(2), inp)
+    error.graphplot(dataSetIncrements, final_array.get(1), final_array.get(2), inp) #For error plotting
+    # error.graphplot(dataSetIncrements, final_array2.get(1), final_array2.get(2), inp) #For time
+    error.graphplot(dataSetIncrements, final_array3.get(1), final_array3.get(2), inp) #For mean
+    # error.graphplot(dataSetIncrements, final_array3.get(1)[1], final_array3.get(2), inp) #For Standard Deviation
 
     samples.closeFiles()
