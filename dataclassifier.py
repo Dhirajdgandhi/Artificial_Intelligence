@@ -1,5 +1,7 @@
 import math
+import sys
 import time
+import argparse
 import statistics
 from knn import KNN
 import matplotlib.pyplot as plt
@@ -142,8 +144,17 @@ if __name__ == '__main__':
     bayes_msd=[]
     knn_msd=[]
 
-    inp = input("Type FACE or DIGIT")
-    gridSize = int(input("Value of Grid"))
+    # inp = input("Type FACE or DIGIT")
+    # gridSize = int(input("Value of Grid"))
+    # inp = sys.argv[1]
+    # gridSize = int(sys.argv[2])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input')
+    parser.add_argument('--gridSize')
+    args = parser.parse_args()
+
+    inp = args.input
+    gridSize = int(args.gridSize)
     POSSIBLE_VALUES = [x for x in range(0, gridSize * gridSize + 1)]
 
     map = {
