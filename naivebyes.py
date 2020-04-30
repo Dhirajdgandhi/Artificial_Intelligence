@@ -9,15 +9,18 @@ class NaiveBayesClassifier:
     P_A = 'P(A)'
     P_B = 'P(B)'
 
-    # Smotthing
+    # Smoothing
     kgrid = [0.001, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 20, 50]
 
-    def __init__(self, FEATURES, LABELS, POSSIBLE_VALUES):
+    def __init__(self, FEATURES, LABELS, POSSIBLE_VALUES, K_VALUE):
         self.LabelMap = {}
         self.FeatureMap = {}
         self.FEATURES = FEATURES
         self.LABELS = LABELS
-        self.K = 0.001
+        if K_VALUE == None:
+            self.K = 0.001
+        else:
+            self.K = K_VALUE
 
         # Initialization of FMAP - FEATURES X LABELS X POSSIBLE_VALUES
         for featureIndex in range(self.FEATURES):

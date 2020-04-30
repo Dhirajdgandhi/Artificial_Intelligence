@@ -131,7 +131,7 @@ PIXELS = "PIXELS"
 
 if __name__ == '__main__':
     print("TRAINING OUR MODEL FIRST")
-    PERCENT_INCREMENT = 10
+    # PERCENT_INCREMENT = 10
 
     perceptron_y = []
     bayes_y = []
@@ -151,10 +151,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--input')
     parser.add_argument('--gridSize')
+    #Have to add from this
+    parser.add_argument('--smoothingValue')
+    parser.add_argument('--classifier')
+    parser.add_argument('--percentIncrement')
     args = parser.parse_args()
 
     inp = args.input
     gridSize = int(args.gridSize)
+    k_value = float(args.smoothingValue)
+    PERCENT_INCREMENT = int(args.percentIncrement)
     POSSIBLE_VALUES = [x for x in range(0, gridSize * gridSize + 1)]
 
     map = {
@@ -186,7 +192,7 @@ if __name__ == '__main__':
 
     # Initialization of Classifiers
     perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
-    naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, POSSIBLE_VALUES)
+    naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, POSSIBLE_VALUES, k_value)
     KNNClassifier = KNN(num_neighbors=20)
 
     featureValueListForAllTestingImages = actualTestingLabelList = []
