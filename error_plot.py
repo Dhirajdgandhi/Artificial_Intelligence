@@ -22,4 +22,4 @@ class Error:
             pyplot.text(data, errorRate, str(int(errorRate)))
 
         plt.title(self.classifier)
-        plt.show()
+        plt.show();
