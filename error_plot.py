@@ -4,16 +4,22 @@ from matplotlib import pyplot
 
 class Error:
 
-    def graphplot(self, dataset, errorRateList, type, method):
-        for i in range(len(errorRateList)):
-            plt.plot(dataset, errorRateList[i], label=type[i])
-            plt.xlim(0, dataset[-1] + dataset[-1]/10)
-            plt.ylim(0, 100)
+    def __init__(self, classifier, dataSetIncrements, dataset):
+        self.classifier = classifier
+        self.dataSetIncrements = dataSetIncrements
+        self.dataset = dataset
 
-        for i in range(len(errorRateList)):
-            for data, errorRate in zip(dataset, errorRateList[i]):
-                pyplot.text(data, errorRate, str(int(errorRate)))
+    def graphplot(self, errorRateList):
+        # for i in range(len(errorRateList)):
+        # for i in range(len(errorRateList)):
+        plt.plot(self.dataSetIncrements, errorRateList)
+        plt.xlabel("Dataset size")
+        plt.ylabel("Error Rate")
+        # plt.xlim(0, self.dataSetIncrements[-1] + self.dataSetIncrements[-1] / 10)
+        # plt.ylim(0, 100)
 
-        plt.title(method)
-        plt.legend()
+        for data, errorRate in zip(self.dataSetIncrements, errorRateList):
+            pyplot.text(data, errorRate, str(int(errorRate)))
+
+        plt.title(self.classifier)
         plt.show()

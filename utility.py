@@ -1,3 +1,4 @@
+import statistics
 from collections import Counter
 
 
@@ -13,3 +14,11 @@ def euclidean_distance(row1, row2):
 def most_frequent(List):
     occurence_count = Counter(List)
     return occurence_count.most_common(1)[0][0]
+
+
+def mean_standard_deviation(errorRate, name):
+    if len(errorRate) > 1:
+        mean = statistics.mean(errorRate)
+        standard_deviation = statistics.stdev(errorRate)
+        print(name, " mean = ", mean, " and Standard Deviation = ", standard_deviation)
+        return mean, standard_deviation
