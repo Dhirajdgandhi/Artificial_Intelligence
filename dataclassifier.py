@@ -147,12 +147,15 @@ if __name__ == '__main__':
     isPerceptron = False
     isNaiveBayes = False
     isKnn = False
+    All = False
     if classifier == PERCEPTRON:
         isPerceptron = True
     elif classifier == NAIVEBAYES:
         isNaiveBayes = True
-    else:
+    elif classifier == KNN:
         isKnn = True
+    else:
+        All = True
     ''' ####  #### '''
 
     possible_featureValues = [x for x in range(0, gridSize * gridSize + 1)]
@@ -186,6 +189,12 @@ if __name__ == '__main__':
     elif isNaiveBayes: naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, possible_featureValues,
                                                                k_value)
     elif isKnn: KNNClassifier = KNN(num_neighbors=20)
+    else:
+        perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
+        naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS,
+                                                                       possible_featureValues,
+                                                                       k_value)
+        KNNClassifier = KNN(num_neighbors=20)
 
     featureValueListForAllTestingImages = actualTestingLabelList = []
 
@@ -200,14 +209,14 @@ if __name__ == '__main__':
         ImageFeatureLabelZipList = zip(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
 
         ''' ####################  TRAINING PHASE FOR PERCEPTRON ############# '''
-        if isPerceptron:
+        if isPerceptron or All:
             startTimer = time.time()
             for featureValueListPerImage, actualLabel in ImageFeatureLabelZipList:
                 perceptronClassifier.runModel(True, featureValueListPerImage, actualLabel)
             endTimer = time.time()
         ''' ####################  TRAINING PHASE FOR NAIVE BYES ############# '''
 
-        if isNaiveBayes:
+        if isNaiveBayes or All:
             startTimer = time.time()
             naiveBayesClassifier.constructLabelsProbability(actualLabel_currentTrainingImages)
             naiveBayesClassifier.constructFeaturesProbability(featureValueList_currentTrainingImages,
@@ -216,7 +225,7 @@ if __name__ == '__main__':
             endTimer = time.time()
         ''' ################## NO TRAINING PHASE FOR KNN #################  '''
 
-        if isKnn:
+        if isKnn or All:
             KNNClassifier.storeTrainingSet(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
         ''' SIMPLY STORING FOR KNN '''
 
