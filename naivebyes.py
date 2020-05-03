@@ -17,6 +17,7 @@ class NaiveBayesClassifier:
         self.FeatureMap = {}
         self.FEATURES = FEATURES
         self.LABELS = LABELS
+        self.POSSIBLE_VALUES = POSSIBLE_VALUES
         if K_VALUE == None:
             self.K = 0.001
         else:
@@ -90,3 +91,23 @@ class NaiveBayesClassifier:
             return 1
         else:
             return 0
+
+    # def oddsratio(self, trainingLabels):
+    #     odds = {}
+    #     # for featureIndex in range(self.FEATURES):
+    #     #     odds[featureIndex] = 0
+    #     # a=self.LABELS[0]
+    #     # b=self.LABELS[1]
+    #     for label in trainingLabels:
+    #         self.LabelMap[label] += 1
+    #     for featureIndex in range(self.FEATURES):
+    #         for labelIndex in range(self.LABELS):
+    #             sum = 0
+    #             for possibleValueIndex in self.POSSIBLE_VALUES:
+    #                 sum += self.FeatureMap.get(featureIndex).get(labelIndex).get(possibleValueIndex) + self.K
+    #         odds[featureIndex] = (self.FeatureMap[featureIndex][labelIndex][possibleValueIndex]/self.LabelMap.get(0))/(self.FeatureMap[featureIndex][labelIndex][possibleValueIndex]/self.LabelMap.get(1))
+    #                 # print(odds[featureIndex]," General Kenobi ", featureIndex)
+    #                 # print(self.LabelMap.get(0))
+    #     # print(odds)
+
+

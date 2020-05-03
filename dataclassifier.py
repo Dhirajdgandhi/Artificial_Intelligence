@@ -191,7 +191,7 @@ if __name__ == '__main__':
     elif isNaiveBayes: naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, possible_featureValues,
                                                                k_value)
     elif isKnn: KNNClassifier = KNN(num_neighbors=20)
-    else: # ALL
+    else: 
         perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
         naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS,
                                                                        possible_featureValues,
@@ -224,6 +224,7 @@ if __name__ == '__main__':
             naiveBayesClassifier.constructFeaturesProbability(featureValueList_currentTrainingImages,
                                                               actualLabel_currentTrainingImages,
                                                               possible_featureValues)
+            # naiveBayesClassifier.oddsratio(actualLabel_currentTrainingImages)
             endTimer = time.time()
         ''' ################## NO TRAINING PHASE FOR KNN #################  '''
 
