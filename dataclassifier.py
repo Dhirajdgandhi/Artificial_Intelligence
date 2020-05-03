@@ -17,7 +17,8 @@ class DataClassifier:
         self.pixelGrid = pixelGrid
         self.imgHeight = imgHeight
         self.imgWidth = imgWidth
-        self.FEATURES = math.ceil((imgHeight - self.pixelGrid + 1) * (imgWidth - self.pixelGrid + 1))
+        self.FEATURES = math.ceil((imgHeight - self.pixelGrid + 1) * (imgWidth - self.pixelGrid + 1)) \
+                        # + (self.imgHeight * self.imgWidth)
         self.LABELS = LABELS
         self.pixelChars = pixelChars
         self.FileObject = None
@@ -92,6 +93,7 @@ class DataClassifier:
                     imageLine = lines_itr.__next__()
 
                 featureValueListPerImage = self.splitImageLineFeaturesIntoGridFeatures(imageLinesList, gridSize)
+                # featureValueListPerImage.extend(self.splitImageLineFeaturesIntoGridFeatures(imageLinesList, 1))
 
                 totalImages += 1
                 actualLabel = labelsLines_itr.__next__()
@@ -152,7 +154,7 @@ if __name__ == '__main__':
         isPerceptron = True
     elif classifier == NAIVEBAYES:
         isNaiveBayes = True
-    elif classifier == KNN:
+    elif classifier == KNN_:
         isKnn = True
     else:
         All = True
@@ -189,7 +191,7 @@ if __name__ == '__main__':
     elif isNaiveBayes: naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, possible_featureValues,
                                                                k_value)
     elif isKnn: KNNClassifier = KNN(num_neighbors=20)
-    else:
+    else: # ALL
         perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
         naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS,
                                                                        possible_featureValues,
@@ -198,14 +200,14 @@ if __name__ == '__main__':
 
     featureValueListForAllTestingImages = actualTestingLabelList = []
 
-    print("##### TRAINING OUR MODEL ######")
+    # print("##### TRAINING OUR MODEL ######")
     errorPrediction = total = 0
     while dataset < totalDataset:
 
         featureValueList_currentTrainingImages = featureValueListForAllTrainingImages[dataset:dataset + increments]
         actualLabel_currentTrainingImages = actualLabelForTrainingList[dataset:dataset + increments]
 
-        print("\n\n\n\n\n Training ON {0} to {1} data".format(dataset, dataset + increments))
+        # print("\n\n\n\n\n Training ON {0} to {1} data".format(dataset, dataset + increments))
         ImageFeatureLabelZipList = zip(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
 
         ''' ####################  TRAINING PHASE FOR PERCEPTRON ############# '''
@@ -232,7 +234,7 @@ if __name__ == '__main__':
         ''' ####################  TESTING PHASE ############# '''
         samples.initTestIters()
 
-        print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset + increments))
+        # print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset + increments))
 
         featureValueListForAllTestingImages, actualTestingLabelList = \
             dataClassifier.extractFeatures(samples.test_lines_itr, samples.test_labelsLines_itr)
@@ -251,12 +253,12 @@ if __name__ == '__main__':
             total += 1
 
         errorRate = (errorPrediction * 100) / total
-        print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
+        # print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
 
         # mean, sd = mean_standard_deviation(errorRate, classifier)
 
-        errorRateList.append(errorRate)
-        timeList.append(endTimer - startTimer)
+        errorRateList.append(int(errorRate))
+        timeList.append('%.2f'%(endTimer - startTimer))
         # meanList.append(mean)
         # sdList.append(sd)
 

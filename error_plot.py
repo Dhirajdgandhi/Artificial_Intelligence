@@ -14,12 +14,12 @@ class Error:
         # for i in range(len(errorRateList)):
         plt.plot(self.dataSetIncrements, errorRateList)
         plt.xlabel("Dataset size")
-        plt.ylabel("Error Rate")
+        plt.ylabel("Rate")
         # plt.xlim(0, self.dataSetIncrements[-1] + self.dataSetIncrements[-1] / 10)
         # plt.ylim(0, 100)
 
         for data, errorRate in zip(self.dataSetIncrements, errorRateList):
-            pyplot.text(data, errorRate, str(int(errorRate)))
+            pyplot.text(data, errorRate, str(errorRate))
 
         plt.title(self.classifier)
         plt.show();
