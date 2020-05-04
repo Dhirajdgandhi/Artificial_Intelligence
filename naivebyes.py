@@ -9,6 +9,10 @@ class NaiveBayesClassifier:
     P_A = 'P(A)'
     P_B = 'P(B)'
 
+    def reinit(self):
+        self.LabelMap = {}
+        self.FeatureMap = {}
+
     def __init__(self, FEATURES, LABELS, POSSIBLE_VALUES, K_VALUE):
         self.LabelMap = {}
         self.FeatureMap = {}

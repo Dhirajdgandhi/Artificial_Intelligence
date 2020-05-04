@@ -240,9 +240,10 @@ if __name__ == '__main__':
 
             if isNaiveBayes or All:
                 startTimer = time.time()
-                naiveBayesClassifier.constructLabelsProbability(actualLabel_currentTrainingImages)
-                naiveBayesClassifier.constructFeaturesProbability(featureValueList_currentTrainingImages,
-                                                                  actualLabel_currentTrainingImages,
+                naiveBayesClassifier.reinit()
+                naiveBayesClassifier.constructLabelsProbability(actualLabelForTrainingList[: dataset + increments])
+                naiveBayesClassifier.constructFeaturesProbability(featureValueListForAllTrainingImages[: dataset + increments],
+                                                                  actualLabelForTrainingList[: dataset + increments],
                                                                   possible_featureValues)
                 # naiveBayesClassifier.oddsratio(actualLabel_currentTrainingImages)
                 endTimer = time.time()
@@ -291,7 +292,7 @@ if __name__ == '__main__':
     error.graphplot(runTimeList, "Time"); #For time
 
     meanList, sdList = mean_standard_deviation(runErrorList)
-    print(meanList, sdList)
+    # print(meanList, sdList)
     error.meansd_graphplot(meanList, "Mean");  # For mean
     error.meansd_graphplot(sdList, "Standard Deviation"); #For Standard Deviation
 

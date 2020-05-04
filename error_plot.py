@@ -13,7 +13,7 @@ class Error:
         # for i in range(len(errorRateList)):
         # for i in range(len(errorRateList)):
         for i in range(len(errorRateList)):
-            plt.plot(self.dataSetIncrements, errorRateList[i])
+            plt.plot(self.dataSetIncrements, errorRateList[i]);
         plt.xlabel("Dataset size")
         plt.ylabel(yLabel)
         # plt.xlim(0, self.dataSetIncrements[-1] + self.dataSetIncrements[-1] / 10)
