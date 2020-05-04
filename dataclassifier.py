@@ -190,7 +190,7 @@ if __name__ == '__main__':
     runTimeList = []
     runDataSetIncrements = []
 
-    for _ in range(0, 2):
+    for _ in range(0, 5):
 
         errorRateList = []
         dataSetIncrements = []
