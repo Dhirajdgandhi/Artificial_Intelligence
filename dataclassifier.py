@@ -240,7 +240,7 @@ if __name__ == '__main__':
 
             if isNaiveBayes or All:
                 startTimer = time.time()
-                naiveBayesClassifier.reinit()
+                naiveBayesClassifier.reinit(possible_featureValues)
                 naiveBayesClassifier.constructLabelsProbability(actualLabelForTrainingList[: dataset + increments])
                 naiveBayesClassifier.constructFeaturesProbability(featureValueListForAllTrainingImages[: dataset + increments],
                                                                   actualLabelForTrainingList[: dataset + increments],
