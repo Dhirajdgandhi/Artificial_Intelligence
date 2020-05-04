@@ -9,12 +9,12 @@ class Error:
         self.dataSetIncrements = dataSetIncrements
         self.dataset = dataset
 
-    def graphplot(self, errorRateList):
+    def graphplot(self, errorRateList, yLabel):
         # for i in range(len(errorRateList)):
         # for i in range(len(errorRateList)):
         plt.plot(self.dataSetIncrements, errorRateList)
         plt.xlabel("Dataset size")
-        plt.ylabel("Rate")
+        plt.ylabel(yLabel)
         # plt.xlim(0, self.dataSetIncrements[-1] + self.dataSetIncrements[-1] / 10)
         # plt.ylim(0, 100)
 
