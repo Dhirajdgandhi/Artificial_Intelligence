@@ -190,7 +190,7 @@ if __name__ == '__main__':
     runTimeList = []
     runDataSetIncrements = []
 
-    for _ in range(0, 5):
+    for _ in range(0, 3):
 
         errorRateList = []
         dataSetIncrements = []
@@ -240,7 +240,7 @@ if __name__ == '__main__':
 
             if isNaiveBayes or All:
                 startTimer = time.time()
-                naiveBayesClassifier.reinit(possible_featureValues)
+                naiveBayesClassifier.resdinit(possible_featureValues)
                 naiveBayesClassifier.constructLabelsProbability(actualLabelForTrainingList[: dataset + increments])
                 naiveBayesClassifier.constructFeaturesProbability(featureValueListForAllTrainingImages[: dataset + increments],
                                                                   actualLabelForTrainingList[: dataset + increments],

@@ -9,9 +9,13 @@ class NaiveBayesClassifier:
     P_A = 'P(A)'
     P_B = 'P(B)'
 
-    def reinit(self, POSSIBLE_VALUES):
+    def __init__(self, FEATURES, LABELS, POSSIBLE_VALUES, K_VALUE):
         self.LabelMap = {}
         self.FeatureMap = {}
+        self.FEATURES = FEATURES
+        self.LABELS = LABELS
+        self.POSSIBLE_VALUES = POSSIBLE_VALUES
+        self.K = K_VALUE
 
         # Initialization of FMAP - FEATURES X LABELS X POSSIBLE_VALUES
         for featureIndex in range(self.FEATURES):
@@ -25,13 +29,9 @@ class NaiveBayesClassifier:
         for labelIndex in range(0, self.LABELS):
             self.LabelMap[labelIndex] = 0
 
-    def __init__(self, FEATURES, LABELS, POSSIBLE_VALUES, K_VALUE):
+    def resdinit(self, POSSIBLE_VALUES):
         self.LabelMap = {}
         self.FeatureMap = {}
-        self.FEATURES = FEATURES
-        self.LABELS = LABELS
-        self.POSSIBLE_VALUES = POSSIBLE_VALUES
-        self.K = K_VALUE
 
         # Initialization of FMAP - FEATURES X LABELS X POSSIBLE_VALUES
         for featureIndex in range(self.FEATURES):
