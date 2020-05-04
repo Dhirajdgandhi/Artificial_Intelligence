@@ -118,6 +118,8 @@ PIXELS = "PIXELS"
 PERCEPTRON = "PERCEPTRON"
 NAIVEBAYES = "NAIVEBAYES"
 KNN_ = "KNN"
+# Smoothing
+smoothingValueList = [0.001, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 20, 50]
 
 if __name__ == '__main__':
 
@@ -139,7 +141,8 @@ if __name__ == '__main__':
 
     inp = args.input
     gridSize = int(args.gridSize)
-    k_value = float(args.smoothingValue)
+    smoothingValue = float(0.001) # Default Smoothing Value
+    if args.smoothingValue is not None: smoothingValue = float(args.smoothingValue)
     percentIncrement = int(args.percentIncrement)
     '''############ '''
 
@@ -189,13 +192,13 @@ if __name__ == '__main__':
     ''' Initialization of Classifiers '''
     if isPerceptron: perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
     elif isNaiveBayes: naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, possible_featureValues,
-                                                               k_value)
+                                                                   smoothingValue)
     elif isKnn: KNNClassifier = KNN(num_neighbors=20)
     else: 
         perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
         naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS,
-                                                                       possible_featureValues,
-                                                                       k_value)
+                                                    possible_featureValues,
+                                                    smoothingValue)
         KNNClassifier = KNN(num_neighbors=20)
 
     featureValueListForAllTestingImages = actualTestingLabelList = []
