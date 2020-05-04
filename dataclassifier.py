@@ -290,7 +290,8 @@ if __name__ == '__main__':
     error.graphplot(runErrorList, "Error Rate");  # For error plotting
     error.graphplot(runTimeList, "Time"); #For time
 
-    meanList, sdList = mean_standard_deviation(errorRateList)
+    meanList, sdList = mean_standard_deviation(runErrorList)
+    print(meanList, sdList)
     error.meansd_graphplot(meanList, "Mean");  # For mean
     error.meansd_graphplot(sdList, "Standard Deviation"); #For Standard Deviation
 

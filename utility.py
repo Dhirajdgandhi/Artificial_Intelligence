@@ -19,7 +19,8 @@ def most_frequent(List):
 def mean_standard_deviation(errorRate):
     meanList = []
     sdList = []
-    for datapoints in len(errorRate[0]):
+    print(errorRate)
+    for datapoints in range(0,len(errorRate[0])):
         eachErrorRate = 0
         for run in range(0,5):
             eachErrorRate += errorRate[run][datapoints]
