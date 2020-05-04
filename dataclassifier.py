@@ -190,7 +190,7 @@ if __name__ == '__main__':
     runTimeList = []
     runDataSetIncrements = []
 
-    for _ in range(0, 5):
+    for _ in range(0, 2):
 
         errorRateList = []
         dataSetIncrements = []
@@ -291,7 +291,7 @@ if __name__ == '__main__':
     error.graphplot(runTimeList, "Time"); #For time
 
     meanList, sdList = mean_standard_deviation(errorRateList)
-    error.graphplot(meanList, "Mean");  # For mean
-    error.graphplot(sdList, "Standard Deviation"); #For Standard Deviation
+    error.meansd_graphplot(meanList, "Mean");  # For mean
+    error.meansd_graphplot(sdList, "Standard Deviation"); #For Standard Deviation
 
     samples.closeFiles()
