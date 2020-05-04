@@ -183,12 +183,20 @@ if __name__ == '__main__':
     samples.readFiles()
 
     ''' Extracting Features from the Training Data '''
-    dataset = 0
     featureValueListForAllTrainingImages, actualLabelForTrainingList = \
         dataClassifier.extractFeatures(samples.train_lines_itr, samples.train_labelsLines_itr)
 
+    runErrorList = []
+    runTimeList = []
+    runDataSetIncrements = []
+
     for _ in range(0, 5):
 
+        errorRateList = []
+        dataSetIncrements = []
+        timeList = []
+
+        dataset = 0
         # Shuffling
         zipped = list(zip(featureValueListForAllTrainingImages, actualLabelForTrainingList))
         random.shuffle(zipped)
@@ -268,20 +276,21 @@ if __name__ == '__main__':
             errorRate = (errorPrediction * 100) / total
             # print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
 
-            # mean, sd = mean_standard_deviation(errorRate, classifier)
-
             errorRateList.append(int(errorRate))
             timeList.append('%.2f'%(endTimer - startTimer))
-            # meanList.append(mean)
-            # sdList.append(sd)
 
             dataset += increments
             dataSetIncrements.append(dataset)
 
-    error = Error(classifier, dataSetIncrements, inp)
-    error.graphplot(errorRateList, "Error Rate");  # For error plotting
-    error.graphplot(timeList, "Time"); #For time
-    mean, sd = mean_standard_deviation(errorRateList, classifier)
+        runErrorList.append(errorRateList)
+        runTimeList.append(timeList)
+        runDataSetIncrements.append(dataSetIncrements)
+
+    error = Error(classifier, runDataSetIncrements[0], inp)
+    error.graphplot(runErrorList, "Error Rate");  # For error plotting
+    error.graphplot(runTimeList, "Time"); #For time
+
+    meanList, sdList = mean_standard_deviation(errorRateList)
     error.graphplot(meanList, "Mean");  # For mean
     error.graphplot(sdList, "Standard Deviation"); #For Standard Deviation
 

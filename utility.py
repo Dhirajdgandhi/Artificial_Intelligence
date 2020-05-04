@@ -16,9 +16,13 @@ def most_frequent(List):
     return occurence_count.most_common(1)[0][0]
 
 
-def mean_standard_deviation(errorRate, name):
-    if len(errorRate) > 1:
-        mean = statistics.mean(errorRate)
-        standard_deviation = statistics.stdev(errorRate)
-        print(name, " mean = ", mean, " and Standard Deviation = ", standard_deviation)
-        return mean, standard_deviation
+def mean_standard_deviation(errorRate):
+    meanList = []
+    sdList = []
+    for datapoints in len(errorRate[0]):
+        eachErrorRate = 0
+        for run in range(0,5):
+            eachErrorRate += errorRate[run][datapoints]
+        meanList.append(statistics.mean(eachErrorRate))
+        sdList.append(statistics.stdev(eachErrorRate))
+    return meanList, sdList

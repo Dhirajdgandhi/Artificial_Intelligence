@@ -12,14 +12,15 @@ class Error:
     def graphplot(self, errorRateList, yLabel):
         # for i in range(len(errorRateList)):
         # for i in range(len(errorRateList)):
-        plt.plot(self.dataSetIncrements, errorRateList)
+        for i in range(len(errorRateList)):
+            plt.plot(self.dataSetIncrements[0], errorRateList[i])
         plt.xlabel("Dataset size")
         plt.ylabel(yLabel)
         # plt.xlim(0, self.dataSetIncrements[-1] + self.dataSetIncrements[-1] / 10)
-        # plt.ylim(0, 100)
+        plt.ylim(0, 100)
 
-        for data, errorRate in zip(self.dataSetIncrements, errorRateList):
-            pyplot.text(data, errorRate, str(errorRate))
+        # for data, errorRate in zip(self.dataSetIncrements, errorRateList):
+        #     pyplot.text(data, errorRate, str(errorRate))
 
         plt.title(self.classifier)
         plt.show();
