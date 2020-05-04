@@ -1,5 +1,6 @@
 import argparse
 import math
+import random
 import time
 
 from error_plot import Error
@@ -186,93 +187,102 @@ if __name__ == '__main__':
     featureValueListForAllTrainingImages, actualLabelForTrainingList = \
         dataClassifier.extractFeatures(samples.train_lines_itr, samples.train_labelsLines_itr)
 
-    totalDataset = len(actualLabelForTrainingList)
-    increments = int(totalDataset * percentIncrement / 100)
+    for _ in range(0, 5):
 
-    ''' Initialization of Classifiers '''
-    if isPerceptron: perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
-    elif isNaiveBayes: naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, possible_featureValues,
-                                                                   smoothingValue)
-    elif isKnn: KNNClassifier = KNN(num_neighbors=20)
-    else: 
-        perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
-        naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS,
-                                                    possible_featureValues,
-                                                    smoothingValue)
-        KNNClassifier = KNN(num_neighbors=20)
+        # Shuffling
+        zipped = list(zip(featureValueListForAllTrainingImages, actualLabelForTrainingList))
+        random.shuffle(zipped)
+        featureValueListForAllTrainingImages, actualLabelForTrainingList = zip(*zipped)
 
-    featureValueListForAllTestingImages = actualTestingLabelList = []
+        totalDataset = len(actualLabelForTrainingList)
+        increments = int(totalDataset * percentIncrement / 100)
 
-    # print("##### TRAINING OUR MODEL ######")
-    errorPrediction = total = 0
-    while dataset < totalDataset:
+        ''' Initialization of Classifiers '''
+        if isPerceptron: perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
+        elif isNaiveBayes: naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS, possible_featureValues,
+                                                                       smoothingValue)
+        elif isKnn: KNNClassifier = KNN(num_neighbors=20)
+        else:
+            perceptronClassifier = PerceptronClassifier(dataClassifier.FEATURES, dataClassifier.LABELS)
+            naiveBayesClassifier = NaiveBayesClassifier(dataClassifier.FEATURES, dataClassifier.LABELS,
+                                                        possible_featureValues,
+                                                        smoothingValue)
+            KNNClassifier = KNN(num_neighbors=20)
 
-        featureValueList_currentTrainingImages = featureValueListForAllTrainingImages[dataset:dataset + increments]
-        actualLabel_currentTrainingImages = actualLabelForTrainingList[dataset:dataset + increments]
+        featureValueListForAllTestingImages = actualTestingLabelList = []
 
-        # print("\n\n\n\n\n Training ON {0} to {1} data".format(dataset, dataset + increments))
-        ImageFeatureLabelZipList = zip(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
+        # print("##### TRAINING OUR MODEL ######")
+        errorPrediction = total = 0
 
-        ''' ####################  TRAINING PHASE FOR PERCEPTRON ############# '''
-        if isPerceptron or All:
-            startTimer = time.time()
-            for featureValueListPerImage, actualLabel in ImageFeatureLabelZipList:
-                perceptronClassifier.runModel(True, featureValueListPerImage, actualLabel)
-            endTimer = time.time()
-        ''' ####################  TRAINING PHASE FOR NAIVE BYES ############# '''
+        while dataset < totalDataset:
 
-        if isNaiveBayes or All:
-            startTimer = time.time()
-            naiveBayesClassifier.constructLabelsProbability(actualLabel_currentTrainingImages)
-            naiveBayesClassifier.constructFeaturesProbability(featureValueList_currentTrainingImages,
-                                                              actualLabel_currentTrainingImages,
-                                                              possible_featureValues)
-            # naiveBayesClassifier.oddsratio(actualLabel_currentTrainingImages)
-            endTimer = time.time()
-        ''' ################## NO TRAINING PHASE FOR KNN #################  '''
+            featureValueList_currentTrainingImages = featureValueListForAllTrainingImages[dataset:dataset + increments]
+            actualLabel_currentTrainingImages = actualLabelForTrainingList[dataset:dataset + increments]
 
-        if isKnn or All:
-            KNNClassifier.storeTrainingSet(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
-        ''' SIMPLY STORING FOR KNN '''
+            # print("\n\n\n\n\n Training ON {0} to {1} data".format(dataset, dataset + increments))
+            ImageFeatureLabelZipList = zip(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
 
-        ''' ####################  TESTING PHASE ############# '''
-        samples.initTestIters()
-
-        # print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset + increments))
-
-        featureValueListForAllTestingImages, actualTestingLabelList = \
-            dataClassifier.extractFeatures(samples.test_lines_itr, samples.test_labelsLines_itr)
-
-        for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualTestingLabelList):
-            if isPerceptron: errorPrediction += perceptronClassifier.runModel(False, featureValueListPerImage, actualLabel)
-            if isNaiveBayes: errorPrediction += naiveBayesClassifier.testModel(featureValueListPerImage, actualLabel)
-
-            ''' ####################  TESTING PHASE FOR KNN ############# '''
-            if isKnn:
+            ''' ####################  TRAINING PHASE FOR PERCEPTRON ############# '''
+            if isPerceptron or All:
                 startTimer = time.time()
-                errorPrediction += KNNClassifier.test(featureValueListPerImage, actualLabel)
+                for featureValueListPerImage, actualLabel in ImageFeatureLabelZipList:
+                    perceptronClassifier.runModel(True, featureValueListPerImage, actualLabel)
                 endTimer = time.time()
-            ''' ####################  TESTING PHASE OVER FOR KNN ############# '''
+            ''' ####################  TRAINING PHASE FOR NAIVE BYES ############# '''
 
-            total += 1
+            if isNaiveBayes or All:
+                startTimer = time.time()
+                naiveBayesClassifier.constructLabelsProbability(actualLabel_currentTrainingImages)
+                naiveBayesClassifier.constructFeaturesProbability(featureValueList_currentTrainingImages,
+                                                                  actualLabel_currentTrainingImages,
+                                                                  possible_featureValues)
+                # naiveBayesClassifier.oddsratio(actualLabel_currentTrainingImages)
+                endTimer = time.time()
+            ''' ################## NO TRAINING PHASE FOR KNN #################  '''
 
-        errorRate = (errorPrediction * 100) / total
-        # print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
+            if isKnn or All:
+                KNNClassifier.storeTrainingSet(featureValueList_currentTrainingImages, actualLabel_currentTrainingImages)
+            ''' SIMPLY STORING FOR KNN '''
 
-        # mean, sd = mean_standard_deviation(errorRate, classifier)
+            ''' ####################  TESTING PHASE ############# '''
+            samples.initTestIters()
 
-        errorRateList.append(int(errorRate))
-        timeList.append('%.2f'%(endTimer - startTimer))
-        # meanList.append(mean)
-        # sdList.append(sd)
+            # print("TESTING our model that is TRAINED ON {0} to {1} data".format(0, dataset + increments))
 
-        dataset += increments
-        dataSetIncrements.append(dataset)
+            featureValueListForAllTestingImages, actualTestingLabelList = \
+                dataClassifier.extractFeatures(samples.test_lines_itr, samples.test_labelsLines_itr)
+
+            for featureValueListPerImage, actualLabel in zip(featureValueListForAllTestingImages, actualTestingLabelList):
+                if isPerceptron: errorPrediction += perceptronClassifier.runModel(False, featureValueListPerImage, actualLabel)
+                if isNaiveBayes: errorPrediction += naiveBayesClassifier.testModel(featureValueListPerImage, actualLabel)
+
+                ''' ####################  TESTING PHASE FOR KNN ############# '''
+                if isKnn:
+                    startTimer = time.time()
+                    errorPrediction += KNNClassifier.test(featureValueListPerImage, actualLabel)
+                    endTimer = time.time()
+                ''' ####################  TESTING PHASE OVER FOR KNN ############# '''
+
+                total += 1
+
+            errorRate = (errorPrediction * 100) / total
+            # print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
+
+            # mean, sd = mean_standard_deviation(errorRate, classifier)
+
+            errorRateList.append(int(errorRate))
+            timeList.append('%.2f'%(endTimer - startTimer))
+            # meanList.append(mean)
+            # sdList.append(sd)
+
+            dataset += increments
+            dataSetIncrements.append(dataset)
 
     error = Error(classifier, dataSetIncrements, inp)
     error.graphplot(errorRateList, "Error Rate");  # For error plotting
     error.graphplot(timeList, "Time"); #For time
-    # error.graphplot(meanList, "Mean");  # For mean
-    # error.graphplot(sdList, "Standard Deviation"); #For Standard Deviation
+    mean, sd = mean_standard_deviation(errorRateList, classifier)
+    error.graphplot(meanList, "Mean");  # For mean
+    error.graphplot(sdList, "Standard Deviation"); #For Standard Deviation
 
     samples.closeFiles()
