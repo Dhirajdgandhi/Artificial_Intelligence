@@ -3,8 +3,10 @@ import numpy as np
 
 class PerceptronClassifier:
     def __init__(self, FEATURES, LABELS):
-        self.SHAPE = (LABELS, FEATURES + 1)  # The +1 is for our w0 weight.
-        self.weightMatrix = np.zeros(self.SHAPE)
+        self.SHAPE = (LABELS, FEATURES)  # The +1 is for our w0 weight.
+        weights = np.random.random_sample(self.SHAPE)
+        biasWeights = np.ones((LABELS, 1))
+        self.weightMatrix = np.append(biasWeights, weights, 1)
 
     def updateWeights(self, predictedLabel, actualLabel, featureValueList):
         # print("Updating Weights")

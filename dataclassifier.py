@@ -259,20 +259,20 @@ if __name__ == '__main__':
         errorRate = (errorPrediction * 100) / total
         # print("Error is", errorPrediction, "out of Total of ", total, " : ", errorRate)
 
-        mean, sd = mean_standard_deviation(errorRate, classifier)
+        # mean, sd = mean_standard_deviation(errorRate, classifier)
 
         errorRateList.append(int(errorRate))
         timeList.append('%.2f'%(endTimer - startTimer))
-        meanList.append(mean)
-        sdList.append(sd)
+        # meanList.append(mean)
+        # sdList.append(sd)
 
         dataset += increments
         dataSetIncrements.append(dataset)
 
     error = Error(classifier, dataSetIncrements, inp)
-    error.graphplot(errorRateList, "Error Rate")  # For error plotting
-    error.graphplot(timeList, "Time") #For time
-    error.graphplot(meanList, "Mean");  # For mean
-    error.graphplot(sdList, "Standard Deviation"); #For Standard Deviation
+    error.graphplot(errorRateList, "Error Rate");  # For error plotting
+    error.graphplot(timeList, "Time"); #For time
+    # error.graphplot(meanList, "Mean");  # For mean
+    # error.graphplot(sdList, "Standard Deviation"); #For Standard Deviation
 
     samples.closeFiles()
